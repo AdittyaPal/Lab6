@@ -111,7 +111,7 @@ class BinarySearchTree
             display(current->right,++space);//the right subtree is displayed with an increased tab space
             cout<<endl;//a new line to print the current node value
             for(int i=1;i<space;i++)//for loop to print the correct number of
-            cout<<"\t";/tab spaces
+            cout<<"\t";//tab spaces
             cout<<current->data<<endl;//the value at the root of the current subtree is displayed
             display(current->left,space);//the left subtree is displayed
         }
