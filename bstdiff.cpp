@@ -69,32 +69,22 @@ class BinarySearchTree
         }
         else if(current->data==value)//else if the node to be deleted is reached
         {
-            Node* ptr1=current->left;//pointer to the left subtree of the current node
-            Node* ptr2=current->right;//pointer to the right subtree of the current node
-            if(ptr1==NULL&&ptr2==NULL)//if the node is a leaf
-            {
-                delete current;//the node is deleted
-                return NULL;
-            }
-            else if(ptr1==NULL)//if the node has a right subtree
-            {
-                delete current;//the node is deleted
-                return ptr2;//its right subtree is attached to the tree
-            }
-            else if(ptr2==NULL)//if the node has a left subtree
-            {
-                delete current;//the node is deleted
-                return ptr1;//its left subtree is attached to the tree
-            }
+            Node* temp=NULL;
+            if(current->left==NULL&&current->right==NULL);//if the node is a leaf
+            else if(current->left==NULL)//if the node has a right subtree
+            temp=current->right;//temp points to the right subtree of the current node
+            else if(current->right==NULL)//if the node has a left subtree
+            temp=current->left;//temp points to the left subtree of the current node
             else//if the node has a right subtree and a left subtree
             {
-                 findMin(ptr2)->left=ptr1;//the minimum of the right subtree is moved to the current position with its left subtree being the current left subtree
-                 delete current;//the current node is deleted
-                 return ptr2;//the right subtree is attached to the current node
+                 findMin(current->right)->left=current->left;//the minimum of the right subtree is moved to the current position with its left subtree being the current left subtree
+                 temp=current->right;//temp points to the right subtree of the current node
             }
+        delete current;//the node is deleted
+        return temp;//the node pointed to by temp is attached to the tree
         }
         else if(value<current->data)//if the value to the deleted is lesser than the value at the current node
-        current->left=delet(current->left,value);//the node to be deleted might be on the left subtree 
+        current->left=delet(current->left,value);//the node to be deleted might be on the left subtree
         else//if the value to the deleted is greater than the value at the current node
         current->right=delet(current->right,value);//the node to be deleted might be on the left subtree
         return current;//the current node is returned to be attached to the tree
@@ -128,7 +118,7 @@ class BinarySearchTree
         return 0;
     }
 };
-int main()//main function
+/*int main()//main function
 {
     BinarySearchTree b1;//binary search tree object is created
     int choice=0;
@@ -150,4 +140,37 @@ int main()//main function
     cin>>value;
     b1.delet(value);
     b1.display();
+}*/
+int main(){
+   
+    BinarySearchTree bst1;
+    bst1.insert(4);
+    bst1.insert(2);
+    bst1.insert(3);
+    bst1.insert(1);
+    bst1.insert(6);
+    bst1.insert(5);
+    bst1.insert(7);
+    bst1.insert(8);
+    bst1.display();
+    bst1.delet(5);
+    bst1.display();
+    bst1.delet(6);
+    bst1.display();
+    cout << "Deleting 2" << endl;
+    bst1.delet(2);
+    bst1.display();
+    bst1.delet(4);
+    bst1.display();
+    bst1.delet(7);
+    bst1.display();
+    bst1.delet(8);
+    bst1.display();
+    bst1.delet(3);
+    bst1.display();
+    bst1.delet(1);
+    bst1.display();
+    bst1.delet(1);
+    bst1.display();
+
 }
