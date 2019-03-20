@@ -82,63 +82,54 @@ class BinarySearchTree
         else
         return current;//the current node is the leftmost and returned
     }//end of the function to find the minimum of the given subtree
-    void replaceAtParent(Node* A, Node* B)
+    void replaceAtParent(Node* A, Node* B)//function to replace A with B at the parent of A
     {
-        if(A->previous->left==A)
-        A->previous->left=B;
-        else if(A->previous->right==A)
-        A->previous->right=B;
-        if(B!=NULL)
-        B->previous=A->previous;
-        A->previous=NULL;
-    }
-    void deleteNode(int value)//function to call the delete a node from the tree
+	if(A!=this->root)//if A is not the root of the tree
+	{
+	    if(A->previous->left==A)//if A is the left child
+            A->previous->left=B;//then the left pointer of the parent of A now points to B
+            else if(A->previous->right==A)//else if A is the right child
+            A->previous->right=B;//then the right pointer of the parent of A now points to B
+            if(B!=NULL)//if B is not NULL
+            B->previous=A->previous;//the parent of B is the parent of A
+            A->previous=NULL;//A is removed from the tree
+	}
+	else//if A is the root of the tree
+	this->root=B;//the root of the tree is upadted to B
+    }//end of the function to replace A with B at the parent of A
+    void deleteNode(int value)//function to delete a node from the tree
     {
-        Node* ptr=search(value);
+        Node* ptr=search(value);//pointer to the node to be deleted
         if(ptr==NULL)//if current is null the the end of the tree has been reached without encountering the value to be deleted
         cout<<"The value is not present in the tree.\n";
         else
         {
-            if(ptr->left==NULL&&ptr->right==NULL)//if the node is a leaf
+	    Node* temp=NULL;//temporary pointer to point to the node to replace the deleted node
+	    if(ptr->left!=NULL&&ptr->right!=NULL)//if the node has a right subtree and a left subtree
             {
-                replaceAtParent(ptr,NULL);
-                delete ptr;//the node is deleted
-            }
-            else if(ptr->left==NULL)//if the node has a right subtree
-            {
-                replaceAtParent(ptr,ptr->right);
-                delete ptr;//the node is deleted
-            }
-            else if(ptr->right==NULL)//if the node has a left subtree
-            {
-                replaceAtParent(ptr,ptr->left);
-                delete ptr;//the node is deleted
-            }
-            else//if the node has a right subtree and a left subtree
-            {
-                Node* temp=findMin(ptr->right);//pointer to the left subtree of the current node
-                //cout<<temp->data<<endl;
-                replaceAtParent(ptr,temp);
-                //cout<<temp->previous->left->data<<endl;
-                //cout<<temp->previous->right->data<<endl;
-                temp->left=ptr->left;
-                ptr->left->previous=temp;
-                /*if(ptr->right==temp)
+                temp=findMin(ptr->right);//the minimum element in the right subtree of the node to de deleted is found and temp points to it
+                replaceAtParent(ptr,temp);//temp replaces the node to be deleted
+                temp->left=ptr->left;//the left pointer of temp points to the left subtree of the deleted node
+                ptr->left->previous=temp;//the parent of the left subtree of the deleted node is updated to temp
+                if(ptr->right!=temp)//if the node on the right of the deleted node does not replace it, the pointers is updated
                 {
-                    temp->right=ptr->right->right;
-                    ptr->right->right->previous=temp;
-                }
-                else
-                {
-                    temp->right=ptr->right;
-                    ptr->right->previous=temp;
-                }*/
-                //cout<<ptr->left->data<<endl;
-                //cout<<ptr->right->data<<endl;
-                delete ptr;//the current node is deleted
+                    temp->right=ptr->right;//the right pointer of temp points to the right subtree of the deleted node
+                    ptr->right->previous=temp;//the parent of the right subtree of the deleted node is updated to temp
+                }//else it would lead to a pointer pointing to itself
             }
+            else
+	    {
+		if(ptr->left==NULL&&ptr->right==NULL);//if the node is a leaf
+            	else if(ptr->left==NULL)//if the node has a right subtree
+            	temp=ptr->right;//the node to replace the deleted node is its right subtree
+            	else if(ptr->right==NULL)//if the node has a left subtree
+           	temp=ptr->left;//the node to replace the deleted node is its left subtree
+		replaceAtParent(ptr,temp);//temp replaces the node to be deleted
+	    }
+	     delete ptr;//ptr is deleted from the heap
+		
         }
-    }
+    }//end of the function to delete a node from the tree
     void display()//function to call the method to display the tree horizontally
     {
         display(root,0);//using root which is a private memeber
@@ -156,35 +147,8 @@ class BinarySearchTree
             display(current->left,space);//the left subtree is displayed
         }
     }//end of function to display the tree horizontally
-    int count()
-    {
-        return count(root);
-    }
-    int count(Node* current)
-    {
-        if(current!=NULL)
-        return (1+count(current->left)+count(current->right));
-        else
-        return 0;
-    }
-    /*int height()
-    {
-        return height(root);
-    }
-    int height(Node* current)
-    {
-        if(current==NULL)
-        return 0;
-        else 
-        {
-            if(height(current->left>current->right)
-            return (1+height(current->left));
-            else
-            return (1+height(current->right));
-        }
-    }*/
 };
-int main()//main function
+/*int main()//main function
 {
     BinarySearchTree b1;//binary search tree object is created
     int choice=0;
@@ -206,4 +170,41 @@ int main()//main function
     cin>>value;
     b1.deleteNode(value);
     b1.display();
+}*/
+int main()
+{    
+    BinarySearchTree bst1;
+    bst1.insert(4);
+    bst1.insert(2);
+    bst1.insert(3);
+    bst1.insert(1);
+    bst1.insert(6);
+    bst1.insert(5);
+    bst1.insert(7);
+    bst1.insert(8);
+    bst1.display();
+    if(bst1.search(3)!=NULL)
+    cout<<endl<<bst1.search(3)->data<<endl;
+    bst1.display();
+    bst1.deleteNode(5);
+    bst1.display();
+    bst1.deleteNode(6);
+    bst1.display();
+    cout<<"Deleting 2"<<endl;
+    bst1.deleteNode(2);
+    bst1.display();
+    cout<<"Deleting 4"<<endl;
+    bst1.deleteNode(4);
+    cout<<"4 deleted"<<endl;
+    bst1.display();
+    bst1.deleteNode(7);
+    bst1.display();
+    bst1.deleteNode(8);
+    bst1.display();
+    bst1.deleteNode(3);
+    bst1.display();
+    bst1.deleteNode(1);
+    bst1.display();
+    bst1.deleteNode(1);
+    bst1.display();
 }
